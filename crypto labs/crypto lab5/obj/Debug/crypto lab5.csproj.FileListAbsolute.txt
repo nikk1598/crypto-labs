@@ -1,0 +1,10 @@
+E:\VS 2019 projects\crypto lab5\obj\Debug\crypto lab5.csprojAssemblyReference.cache
+E:\VS 2019 projects\crypto lab5\obj\Debug\crypto_lab5.Form1.resources
+E:\VS 2019 projects\crypto lab5\obj\Debug\crypto_lab5.Properties.Resources.resources
+E:\VS 2019 projects\crypto lab5\obj\Debug\crypto lab5.csproj.GenerateResource.cache
+E:\VS 2019 projects\crypto lab5\obj\Debug\crypto lab5.csproj.CoreCompileInputs.cache
+E:\VS 2019 projects\crypto lab5\bin\Debug\crypto lab5.exe.config
+E:\VS 2019 projects\crypto lab5\bin\Debug\crypto lab5.exe
+E:\VS 2019 projects\crypto lab5\bin\Debug\crypto lab5.pdb
+E:\VS 2019 projects\crypto lab5\obj\Debug\crypto lab5.exe
+E:\VS 2019 projects\crypto lab5\obj\Debug\crypto lab5.pdb
