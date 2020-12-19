@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text;
-
+using System.Threading;
 
 namespace crypto_CourseWork_Sazon_411_v2
 {
@@ -11,8 +11,9 @@ namespace crypto_CourseWork_Sazon_411_v2
     {
         string nameOfInputFile="", nameOfKeyFile="", nameOfOutputFile="";
         byte[] resultOfAlgorithm;
-        public delegate  byte[] Encryption(byte[] inputData, byte[] inputKey, Form1 obj);
-        public delegate byte[] Decryption(byte[] inputData, byte[] inputKey, Form1 obj);
+        CancellationTokenSource cancelTokenSource= new CancellationTokenSource();
+        public delegate  byte[] Encryption(byte[] inputData, byte[] inputKey, Form1 obj, CancellationToken token);
+        public delegate byte[] Decryption(byte[] inputData, byte[] inputKey, Form1 obj, CancellationToken token);
         Encryption enc;
         Decryption dec;
         public Form1()
@@ -28,13 +29,13 @@ namespace crypto_CourseWork_Sazon_411_v2
 
         private void CBC_CheckedChanged(object sender, EventArgs e)
         {
-            enc = new Encryption(crypto_CourseWork_Sazon_411_v2.SaferCBC.Encrypt);
+           enc = new Encryption(crypto_CourseWork_Sazon_411_v2.SaferCBC.Encrypt);
             dec = new Decryption(crypto_CourseWork_Sazon_411_v2.SaferCBC.Decrypt);
         }
 
         private void CFB_CheckedChanged(object sender, EventArgs e)
         {
-            enc = new Encryption(crypto_CourseWork_Sazon_411_v2.SaferCFB.Encrypt);
+           enc = new Encryption(crypto_CourseWork_Sazon_411_v2.SaferCFB.Encrypt);
             dec = new Decryption(crypto_CourseWork_Sazon_411_v2.SaferCFB.Decrypt);
         }
 
@@ -46,6 +47,8 @@ namespace crypto_CourseWork_Sazon_411_v2
 
         private async void Encrypt_Click(object sender, EventArgs e)
         {
+           cancelTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancelTokenSource.Token;
             OpenKeyFileBut.Enabled = false;
             OpenTextFileBut.Enabled = false;
             SaveResultBut.Enabled = false;
@@ -55,13 +58,12 @@ namespace crypto_CourseWork_Sazon_411_v2
             CBC.Enabled = false;
             CFB.Enabled = false;
             OFB.Enabled = false;
- 
 
             try
             {
                 resultOfAlgorithm = await Task.Run(() =>
                  {
-                     return enc(File.ReadAllBytes(@nameOfInputFile), File.ReadAllBytes(nameOfKeyFile), this);
+                     return enc(File.ReadAllBytes(@nameOfInputFile), File.ReadAllBytes(nameOfKeyFile), this, token);
                  });
             }
             catch (System.ArgumentException)
@@ -84,6 +86,8 @@ namespace crypto_CourseWork_Sazon_411_v2
 
         private async void Decrypt_Click(object sender, EventArgs e)
         {
+            cancelTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancelTokenSource.Token;
             OpenKeyFileBut.Enabled = false;
             OpenTextFileBut.Enabled = false;
             SaveResultBut.Enabled = false;
@@ -98,7 +102,7 @@ namespace crypto_CourseWork_Sazon_411_v2
             {
                 resultOfAlgorithm = await Task.Run(() =>
                 {
-                    return dec(File.ReadAllBytes(@nameOfInputFile), File.ReadAllBytes(nameOfKeyFile), this);
+                    return dec(File.ReadAllBytes(@nameOfInputFile), File.ReadAllBytes(nameOfKeyFile), this, token);
                 });
             }
             catch (System.ArgumentException)
@@ -130,7 +134,12 @@ namespace crypto_CourseWork_Sazon_411_v2
 
         private void cancelBut_Click(object sender, EventArgs e)
         {
-            Application.Restart();
+            cancelTokenSource.Cancel();
+        }
+
+        private void restartBut_Click(object sender, EventArgs e)
+        {
+              Application.Restart();
         }
 
         private void OpenKeyFileBut_Click(object sender, EventArgs e)

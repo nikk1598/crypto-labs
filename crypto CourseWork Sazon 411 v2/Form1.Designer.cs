@@ -44,6 +44,7 @@
             this.SaveResultBut = new System.Windows.Forms.Button();
             this.progressLabel = new System.Windows.Forms.Label();
             this.cancelBut = new System.Windows.Forms.Button();
+            this.restartBut = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ECB
@@ -104,6 +105,7 @@
             this.EncryptBut.Text = "Encrypt";
             this.EncryptBut.UseVisualStyleBackColor = false;
             this.EncryptBut.Click += new System.EventHandler(this.Encrypt_Click);
+            this.EncryptBut.Click += new System.EventHandler(this.Encrypt_Click);
             // 
             // DecryptBut
             // 
@@ -125,7 +127,7 @@
             this.OpenTextFileBut.ForeColor = System.Drawing.Color.Black;
             this.OpenTextFileBut.Location = new System.Drawing.Point(12, 12);
             this.OpenTextFileBut.Name = "OpenTextFileBut";
-            this.OpenTextFileBut.Size = new System.Drawing.Size(117, 26);
+            this.OpenTextFileBut.Size = new System.Drawing.Size(147, 26);
             this.OpenTextFileBut.TabIndex = 6;
             this.OpenTextFileBut.Text = "Open DataFile";
             this.OpenTextFileBut.UseVisualStyleBackColor = true;
@@ -135,7 +137,7 @@
             // 
             this.OpenKeyFileBut.Location = new System.Drawing.Point(12, 44);
             this.OpenKeyFileBut.Name = "OpenKeyFileBut";
-            this.OpenKeyFileBut.Size = new System.Drawing.Size(117, 26);
+            this.OpenKeyFileBut.Size = new System.Drawing.Size(147, 26);
             this.OpenKeyFileBut.TabIndex = 7;
             this.OpenKeyFileBut.Text = "Open KeyFile";
             this.OpenKeyFileBut.UseVisualStyleBackColor = true;
@@ -144,7 +146,7 @@
             // TextFileNameLabel
             // 
             this.TextFileNameLabel.AutoSize = true;
-            this.TextFileNameLabel.Location = new System.Drawing.Point(135, 21);
+            this.TextFileNameLabel.Location = new System.Drawing.Point(165, 21);
             this.TextFileNameLabel.Name = "TextFileNameLabel";
             this.TextFileNameLabel.Size = new System.Drawing.Size(51, 17);
             this.TextFileNameLabel.TabIndex = 8;
@@ -153,7 +155,7 @@
             // KeyFileNameLabel
             // 
             this.KeyFileNameLabel.AutoSize = true;
-            this.KeyFileNameLabel.Location = new System.Drawing.Point(135, 53);
+            this.KeyFileNameLabel.Location = new System.Drawing.Point(165, 53);
             this.KeyFileNameLabel.Name = "KeyFileNameLabel";
             this.KeyFileNameLabel.Size = new System.Drawing.Size(51, 17);
             this.KeyFileNameLabel.TabIndex = 9;
@@ -190,11 +192,21 @@
             // 
             this.cancelBut.Location = new System.Drawing.Point(12, 76);
             this.cancelBut.Name = "cancelBut";
-            this.cancelBut.Size = new System.Drawing.Size(76, 24);
+            this.cancelBut.Size = new System.Drawing.Size(73, 24);
             this.cancelBut.TabIndex = 14;
-            this.cancelBut.Text = "Restart";
+            this.cancelBut.Text = "Cancel";
             this.cancelBut.UseVisualStyleBackColor = true;
             this.cancelBut.Click += new System.EventHandler(this.cancelBut_Click);
+            // 
+            // restartBut
+            // 
+            this.restartBut.Location = new System.Drawing.Point(86, 76);
+            this.restartBut.Name = "restartBut";
+            this.restartBut.Size = new System.Drawing.Size(73, 24);
+            this.restartBut.TabIndex = 15;
+            this.restartBut.Text = "Restart";
+            this.restartBut.UseVisualStyleBackColor = true;
+            this.restartBut.Click += new System.EventHandler(this.restartBut_Click);
             // 
             // Form1
             // 
@@ -202,6 +214,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(1112, 503);
+            this.Controls.Add(this.restartBut);
             this.Controls.Add(this.cancelBut);
             this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.SaveResultBut);
@@ -242,6 +255,7 @@
         public System.Windows.Forms.Label progressLabel;
         public System.Windows.Forms.Button SaveResultBut;
         private System.Windows.Forms.Button cancelBut;
+        private System.Windows.Forms.Button restartBut;
     }
 }
 

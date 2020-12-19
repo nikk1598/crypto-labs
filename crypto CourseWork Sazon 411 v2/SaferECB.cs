@@ -33,7 +33,13 @@ namespace crypto_CourseWork_Sazon_411_v2
             }));
         }
 
-        public static byte[] Encrypt(byte[] inputBytes, byte[] inputKey, Form1 obj)
+        public static async Task<byte[]> EncryptAsync(byte[] inputBytes, byte[] inputKey, Form1 obj, CancellationToken token)
+        {
+            var result = await Task.Run(() => Encrypt(inputBytes, inputKey, obj, token));
+            return result;
+        }
+
+        public static byte[] Encrypt(byte[] inputBytes, byte[] inputKey, Form1 obj, CancellationToken token)
         {
             byte valueInPadding = 1; //число, которое будет на 1 больше числа недостающих байт (соотв. с рекомнедацией)
             byte[] bytesToGo = new byte[8];
@@ -77,6 +83,12 @@ namespace crypto_CourseWork_Sazon_411_v2
 
             Parallel.For(0, inputBytes.Length, i =>
             {
+                if (token.IsCancellationRequested)
+                {
+                    ProgressBarInit(obj, 0, 0);
+                    return;
+                }
+
                 if (i % 8 == 0)
                 {
                     var bytesToGo2 = new byte[8];
@@ -96,7 +108,7 @@ namespace crypto_CourseWork_Sazon_411_v2
             return bytesResult;
         }
 
-        public static byte[] Decrypt(byte[] inputBytes, byte[] inputKey, Form1 obj)
+        public static byte[] Decrypt(byte[] inputBytes, byte[] inputKey, Form1 obj, CancellationToken token)
         {
             int lengthOfPadding = 0;
             byte[] bytesToGo = new byte[8];
@@ -132,6 +144,12 @@ namespace crypto_CourseWork_Sazon_411_v2
             */
             Parallel.For(8, inputBytes.Length, i =>
             {
+                if (token.IsCancellationRequested)
+                {
+                    ProgressBarInit(obj, 0, 0);
+                    return;
+                }
+
                 if (i % 8 == 0)
                 {
                     var bytesToGo2 = new byte[8];

@@ -89,8 +89,6 @@ namespace crypto_CourseWork_Sazon_411_v2
             будет храниться разбитый на байты текст и разбитые на байты текущие ключи - два ключа, используемые в конкретной итерации */
             int[] exptab = new int[257]; //массив, в котором будут храниться значения первого s-Box
             int[] logtab = new int[257]; //массив, в котором будут храниться значения второго s-Box
-            string outputString = "";
-            ulong outputNum = 0;
             byte[,] arrOfKeys = KeysGeneration(inputKey, numOfIterations); //генерация массива ключей
 
             exptab[0] = 1; logtab[1] = 0; //заполнение s-Boxes

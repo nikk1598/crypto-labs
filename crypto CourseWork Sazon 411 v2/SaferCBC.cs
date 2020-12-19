@@ -30,10 +30,10 @@ namespace crypto_CourseWork_Sazon_411_v2
             }));
         }
 
-        public static byte[] Encrypt(byte[] inputBytes, byte[] inputKey, Form1 obj)
+        public static byte[] Encrypt(byte[] inputBytes, byte[] inputKey, Form1 obj, CancellationToken token)
         {
             byte valueInPadding = 1; //число, которое будет на 1 больше числа недостающих байт (соотв. с рекомнедацией)
-            byte[] bytesToGo = new byte[8], bytesResult = new byte[inputBytes.Length + 8], vector = { 0, 0, 0, 0, 0, 0, 0, 0 };
+            byte[] bytesToGo = new byte[8], bytesResult = new byte[inputBytes.Length + 8], vector = new byte[8];
             int inputBytesArrNewLength = inputBytes.Length;
 
             if (inputKey.Length != 8)
@@ -49,6 +49,8 @@ namespace crypto_CourseWork_Sazon_411_v2
             }
             Array.Resize(ref inputBytes, inputBytesArrNewLength);
             Array.Resize(ref bytesResult, inputBytesArrNewLength + 8);
+            for (int i = 0; i < 8; i++)
+                vector[i] = (byte)(valueInPadding);
 
             bytesToGo = Safer.Encrypt(BitConverter.GetBytes((long)(valueInPadding - 1)), inputKey); //превращаем его в массив из 8 байтов
 
@@ -63,6 +65,13 @@ namespace crypto_CourseWork_Sazon_411_v2
             ProgressBarInit(obj, inputBytes.Length, 8);
             for (int i = 0; i < inputBytes.Length; i = i + 8)
             {
+                if (token.IsCancellationRequested)
+                {
+                    ProgressBarInit(obj, 0, 0);
+                    return inputBytes;
+                }
+;
+
                 Array.Copy(inputBytes, i, bytesToGo, 0, 8);
 
                 for (int j = 0; j < 8; j++)
@@ -81,10 +90,10 @@ namespace crypto_CourseWork_Sazon_411_v2
             return bytesResult;
         }
 
-        public static byte[] Decrypt(byte[] inputBytes, byte[] inputKey, Form1 obj)
+        public static byte[] Decrypt(byte[] inputBytes, byte[] inputKey, Form1 obj, CancellationToken token)
         {
             int lengthOfPadding = 0;
-            byte[] bytesToGo = new byte[8], bytesResult = new byte[inputBytes.Length - 8], vector = { 0, 0, 0, 0, 0, 0, 0, 0 }, savedBytes=new byte[8];
+            byte[] bytesToGo = new byte[8], bytesResult = new byte[inputBytes.Length - 8], vector = new byte[8], savedBytes=new byte[8];
 
             if (inputBytes.Length % 8 != 0) 
             {
@@ -101,11 +110,19 @@ namespace crypto_CourseWork_Sazon_411_v2
             Array.Copy(inputBytes, 0, bytesToGo, 0, 8);
 
             lengthOfPadding = (int)BitConverter.ToInt64(Safer.Decrypt(bytesToGo, inputKey), 0);
+            for (int i = 0; i < 8; i++)
+                vector[i] =(byte) (lengthOfPadding + 1);
 
             LabelChange(obj, " Decrypting your data");
             ProgressBarInit(obj, inputBytes.Length-8, 8);
             for (int i = 8; i < inputBytes.Length; i = i + 8)
             {
+                if (token.IsCancellationRequested)
+                {
+                    ProgressBarInit(obj, 0, 0);
+                    return inputBytes;
+                }
+
                 Array.Copy(inputBytes, i, bytesToGo, 0, 8);
 
                 Array.Copy(inputBytes, i, savedBytes, 0, 8);
