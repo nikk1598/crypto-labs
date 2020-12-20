@@ -19,7 +19,7 @@ namespace crypto_CourseWork_Sazon_411_v2
         {
             obj.BeginInvoke(new ThreadStart(delegate
             {
-               obj.progressBar1.Maximum = max;
+               obj.progressBar1.Maximum=max;
                obj.progressBar1.Step = step;
                obj.progressBar1.Value = 0;
             }));
@@ -71,38 +71,20 @@ namespace crypto_CourseWork_Sazon_411_v2
 
             LabelChange(obj, " Encrypting your data");  //шифруем данные 
             ProgressBarInit(obj, inputBytes.Length, 8);
-            /*
+            
             for (int i = 0; i < inputBytes.Length; i = i + 8)
             {
+                if (token.IsCancellationRequested)
+                {
+                    ProgressBarInit(obj, 0, 0);
+                    return inputBytes;
+                }
+
                 Array.Copy(inputBytes, i, bytesToGo, 0, 8);
                 bytesToGo = Safer.Encrypt(bytesToGo, inputKey);
                 Array.Copy(bytesToGo, 0, bytesResult, i+8, 8);
                 ProgressBarStep(obj);
             }
-            */
-
-            Parallel.For(0, inputBytes.Length, i =>
-            {
-                if (token.IsCancellationRequested)
-                {
-                    ProgressBarInit(obj, 0, 0);
-                    return;
-                }
-
-                if (i % 8 == 0)
-                {
-                    var bytesToGo2 = new byte[8];
-
-                    Array.Copy(inputBytes, i, bytesToGo2, 0, 8);
-
-                    bytesToGo2 = Safer.Encrypt(bytesToGo2, inputKey);
-
-                   Array.Copy(bytesToGo2, 0, bytesResult, i + 8, 8);
-
-                    ProgressBarStep(obj);
-                }
-
-            });
 
             LabelChange(obj, "     Result is ready!");
             return bytesResult;
@@ -133,41 +115,25 @@ namespace crypto_CourseWork_Sazon_411_v2
             LabelChange(obj, " Decrypting your data");
             ProgressBarInit(obj, inputBytes.Length - 8, 8);
 
-            /*  for (int i = 8; i < inputBytes.Length; i = i + 8)
+             for (int i = 8; i < inputBytes.Length; i = i + 8)
               {
-                  Array.Copy(inputBytes, i, bytesToGo, 0, 8);
-                  bytesToGo = Safer.Decrypt(bytesToGo, inputKey);
-                  Array.Copy(bytesToGo, 0, bytesResult, i - 8, 8);
-                  ProgressBarStep(obj);
-
-              }
-            */
-            Parallel.For(8, inputBytes.Length, i =>
-            {
                 if (token.IsCancellationRequested)
                 {
                     ProgressBarInit(obj, 0, 0);
-                    return;
+                    return inputBytes;
                 }
+                Array.Copy(inputBytes, i, bytesToGo, 0, 8);
+                  bytesToGo = Safer.Decrypt(bytesToGo, inputKey);
+                  Array.Copy(bytesToGo, 0, bytesResult, i - 8, 8);
+                  ProgressBarStep(obj);
+              }
+           
 
-                if (i % 8 == 0)
-                {
-                    var bytesToGo2 = new byte[8];
-
-                    Array.Copy(inputBytes, i, bytesToGo2, 0, 8);
-
-                    bytesToGo2 = Safer.Decrypt(bytesToGo2, inputKey);
-
-                    Array.Copy(bytesToGo2, 0, bytesResult, i - 8, 8);
-
-                    ProgressBarStep(obj);
-                }
-            
-        });
             Array.Resize(ref bytesResult, bytesResult.Length - lengthOfPadding);
             LabelChange(obj, "     Result is ready!");
             return bytesResult;
         }
-   
+     
+
     }
 }
